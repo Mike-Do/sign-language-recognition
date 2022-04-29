@@ -7,6 +7,7 @@ import numpy as np
 def videosToFrames():
     directory = 'videos'
     allFrames = []
+    threshold = 2000 # threshold for number of frames from each video; change if necessary
     
     # iterate over files in the directory
     for filename in os.listdir(directory):
@@ -16,15 +17,17 @@ def videosToFrames():
             cap = cv2.VideoCapture(f)
             currFrames = []
 
-            # Loop until the end of the video
-            while (cap.isOpened()):
+            # Loop until the end of the video or until the threshold has been reached
+            count = 0
+            while (cap.isOpened() and count < threshold):
                 # capture frame by frame
                 ret, frame = cap.read()
                 frame = cv2.resize(frame, (540, 380), fx=0, fy=0, interpolation=cv2.INTER_CUBIC)
                 currFrames.append(frame)
+                count += 1
+            allFrames.append(currFrames)
             
             # release the video capture object
             cap.release()
-        allFrames.append(currFrames)
-    
+            
     return allFrames
