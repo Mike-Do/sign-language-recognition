@@ -138,3 +138,6 @@ def sequential_sampling(frame_start, frame_end, num_samples):
     
     # return all the frames to sample
     return frames_to_sample
+
+if __name__ == '__main__':
+    videosToFrames()

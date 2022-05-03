@@ -1,0 +1,74 @@
+INFO:root:Start downloading non-youtube videos.
+INFO:root:gloss: hello, video: 27171.
+WARNING:root:Skipping YouTube video 27171
+INFO:root:gloss: hello, video: 70017.
+WARNING:root:Skipping YouTube video 70017
+INFO:root:gloss: hello, video: 68236.
+WARNING:root:Skipping YouTube video 68236
+INFO:root:gloss: hello, video: 27180.
+WARNING:root:Skipping YouTube video 27180
+INFO:root:gloss: hello, video: 67755.
+WARNING:root:Skipping YouTube video 67755
+INFO:root:gloss: hello, video: 27181.
+WARNING:root:Skipping YouTube video 27181
+INFO:root:gloss: hello, video: 27182.
+WARNING:root:Skipping YouTube video 27182
+INFO:root:gloss: hello, video: 27183.
+INFO:root:Requesting http://www.aslpro.com/main/h/hello.swf
+INFO:root:gloss: hello, video: 27184.
+INFO:root:Requesting http://www.aslsearch.com/signs/videos/greet.mp4
+INFO:root:gloss: hello, video: 27172.
+INFO:root:Requesting https://signstock.blob.core.windows.net/signschool/videos/db_uploads/SignSchool%20Hello-6kvCOzxP9_A.mp4
+ERROR:root:Unsuccessful downloading - video 27172
+INFO:root:gloss: hello, video: 27173.
+INFO:root:Requesting https://media.asldeafined.com/vocabulary/1468580623.2588.mp4
+ERROR:root:Unsuccessful downloading - video 27173
+INFO:root:gloss: hello, video: 27175.
+INFO:root:Requesting https://www.handspeak.com/word/h/hello.mp4
+ERROR:root:Unsuccessful downloading - video 27175
+INFO:root:gloss: hello, video: 27177.
+INFO:root:Requesting https://www.signingsavvy.com/signs/mp4/6/6353.mp4
+ERROR:root:Unsuccessful downloading - video 27177
+INFO:root:gloss: world, video: 63830.
+WARNING:root:Skipping YouTube video 63830
+INFO:root:gloss: world, video: 63836.
+INFO:root:Requesting https://www.signingsavvy.com/signs/mp4/14/14641.mp4
+ERROR:root:Unsuccessful downloading - video 63836
+INFO:root:gloss: world, video: 63837.
+INFO:root:Requesting https://www.signingsavvy.com/signs/mp4/22/22113.mp4
+ERROR:root:Unsuccessful downloading - video 63837
+INFO:root:gloss: world, video: 63838.
+WARNING:root:Skipping YouTube video 63838
+INFO:root:gloss: world, video: 63839.
+WARNING:root:Skipping YouTube video 63839
+INFO:root:gloss: world, video: 66807.
+INFO:root:Requesting https://aslsignbank.haskins.yale.edu/dictionary/protected_media/glossvideo/ASL/WO/WORLD-702.mp4
+ERROR:root:Unsuccessful downloading - video 66807
+INFO:root:gloss: world, video: 67004.
+WARNING:root:Skipping YouTube video 67004
+INFO:root:gloss: world, video: 63840.
+INFO:root:Requesting http://www.aslpro.com/main/w/world.swf
+INFO:root:gloss: world, video: 63841.
+INFO:root:Requesting http://www.aslsearch.com/signs/videos/world.mp4
+ERROR:root:Unsuccessful downloading - video 63841
+INFO:root:gloss: world, video: 63831.
+INFO:root:Requesting https://elementalaslconcepts.weebly.com/uploads/2/4/4/5/24454483/world.mov
+ERROR:root:Unsuccessful downloading - video 63831
+INFO:root:gloss: world, video: 63832.
+INFO:root:Requesting https://media.spreadthesign.com/video/mp4/13/51085.mp4
+ERROR:root:Unsuccessful downloading - video 63832
+INFO:root:gloss: world, video: 63834.
+INFO:root:Requesting https://www.handspeak.com/word/w/world2.mp4
+ERROR:root:Unsuccessful downloading - video 63834
+INFO:root:Start downloading youtube videos.
+INFO:root:Finish downloading youtube video url https://www.youtube.com/watch?v=SiBub8VD5wo
+INFO:root:Finish downloading youtube video url https://www.youtube.com/watch?v=25ymRY7hbjs
+ERROR:root:Unsuccessful downloading - youtube video url https://www.youtube.com/watch?v=3qKcPONtNXQ
+INFO:root:Finish downloading youtube video url https://www.youtube.com/watch?v=DYjjcoTkNa0
+ERROR:root:Unsuccessful downloading - youtube video url https://youtu.be/oRsVMK7sxMQ
+INFO:root:Finish downloading youtube video url https://www.youtube.com/watch?v=FVjpLa8GqeM
+INFO:root:Finish downloading youtube video url https://www.youtube.com/watch?v=WbkSmhKTltU
+INFO:root:Finish downloading youtube video url https://www.youtube.com/watch?v=A5dihMAjeTE
+INFO:root:Finish downloading youtube video url https://www.youtube.com/watch?v=-H4PejCdr6Y
+INFO:root:Finish downloading youtube video url https://www.youtube.com/watch?v=TNms3Jfg89g
+ERROR:root:Unsuccessful downloading - youtube video url https://youtu.be/pFYp5iyu1oE
