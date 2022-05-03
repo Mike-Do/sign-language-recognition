@@ -43,85 +43,21 @@ def videosToFrames():
                     # break if the frame is not valid
                     if not ret:
                         break
-                
-                    # if total_frames > 50:
-                    #     frames_skip = set()
-                    #     num_skips = total_frames - threshold
-                    #     interval = total_frames // num_skips
-
-                    #     # resize the frame to a smaller size and add it to the list of frames
-                    #     frame = cv2.resize(frame, (540, 380), fx=0, fy=0, interpolation=cv2.INTER_CUBIC)
-                    #     curr_frame_num = cap.get(cv2.CAP_PROP_POS_FRAMES)
-
-                    #     if (curr_frame_num % interval == 0 and len(frames_skip) <= num_skips):
-                    #         frames_skip.add(curr_frame_num)
-                    #     else:
-                    #     # if (curr_frame_num not in frames_skip):
-                    #         curr_frames.append(frame)
-                    # else: # if total number of frames less than the threshold
                     curr_frames.append(frame)
                     
                 # release the video capture object
                 cap.release()
                 
                 # sample curr_frames to get 50 frames
-                sampled_frames = sampling(curr_frames)
+                sampled_frames = sequential_sampling(curr_frames)
                 
                 # add the selected 50 frames to the list of all frames        
                 gloss_frames.append(sampled_frames)
 
-        # if not os.path.exists('frames/' + gloss):
-        #     os.makedirs('frames/' + gloss)
-
-        # print("Saving frames for " + filename)
-
-        # # write the frames to the frames directory
-        # for i in range(len(gloss_frames)):
-        #     for j in range(len(gloss_frames[i])):
-        #         # use OpenCv to write the frames to the gloss sub directory
-        #         cv2.imwrite('frames/' + gloss + '/' + filename + '_' + str(i) + '.jpg', gloss_frames[i][j])
-        
         # add all the frames to the all_frames dictionary
         all_frames[gloss] = gloss_frames
-    
-    # print("Printing all frames")
-    # print(all_frames.keys())
 
-    
-    # frame_indices = make_dataset()
-    # selected_frames = {}
-
-    # all_frames - key: gloss, value: list of frames
-    # frame_indices - key: gloss, value: list of lists (indices)
-    # selected_frames - key: gloss, value: list of the selected frames
-
-    # for each gloss in frame indices
-    # for gloss, frames_index in frame_indices.items():
-    #     selected_video_frames = []
-    #     for video_frames_index in range(len(all_frames[gloss])):
-    #         selected_video_indices = frames_index[video_frames_index]
-    #         all_frames_video = all_frames[gloss][video_frames_index]
-    #         selected_frames_video = []
-    #         for i in range(len(all_frames_video)):
-    #             if i in selected_video_indices: # if the index is in the list of selected indices
-    #                 selected_frames_video.append(all_frames_video[i])
-            
-    #         selected_video_frames.append(selected_frames_video)
-            
-    #     selected_frames[gloss] = selected_video_frames
-    
-    # for key, value in selected_frames.items():
-    
-    #     for i in range(len(value)):
-    #         print("Printing the number of frames selected from each video")
-    #         print(len(value[i]))
-
-    # # for each video in the dataset
-    # for index in range(len(frame_indices)):
-    #     # get the selected frames in the video
-    #     video_frames = all_frames[index][frame_indices[index]]
-    #     # add the selected frames to the list of selected frames
-    #     selected_frames.append(video_frames)
+    # print out the all_frames dictionary to check if it's been populated correctly
     for key, value in all_frames.items():
         for i in range(len(value)):
             print("Printing number of frames")
@@ -129,7 +65,7 @@ def videosToFrames():
 
     return all_frames
     
-def sampling(curr_frames):
+def sequential_sampling(curr_frames):
     num_frames = len(curr_frames)
     frames_to_sample = []
     if num_frames > threshold:
