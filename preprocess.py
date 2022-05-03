@@ -8,6 +8,7 @@ import shutil
 
 # dictionary maps glosses to their corresponding frames
 all_frames = {}
+threshold = 50
 
 # This is the method for splitting all video samples into frames.
 def videosToFrames():
@@ -43,9 +44,22 @@ def videosToFrames():
                     if not ret:
                         break
                     
-                    # resize the frame to a smaller size and add it to the list of frames
-                    frame = cv2.resize(frame, (540, 380), fx=0, fy=0, interpolation=cv2.INTER_CUBIC)
-                    curr_frames.append(frame)
+                    if total_frames > 50:
+                        frames_skip = set()
+                        num_skips = total_frames - threshold
+                        interval = total_frames // num_skips
+
+                        # resize the frame to a smaller size and add it to the list of frames
+                        frame = cv2.resize(frame, (540, 380), fx=0, fy=0, interpolation=cv2.INTER_CUBIC)
+                        curr_frame_num = cap.get(cv2.CAP_PROP_POS_FRAMES)
+
+                        if (curr_frame_num % interval == 0 and len(frames_skip) <= num_skips):
+                            frames_skip.add(curr_frame_num)
+                        else:
+                        # if (curr_frame_num not in frames_skip):
+                            curr_frames.append(frame)
+                    else: # if total number of frames less than the threshold
+                        curr_frames.append(frame)
                     
                 # release the video capture object
                 cap.release()
@@ -67,41 +81,50 @@ def videosToFrames():
         # add all the frames to the all_frames dictionary
         all_frames[gloss] = gloss_frames
     
-    print("Printing all frames")
-    print(all_frames.keys())
+    # print("Printing all frames")
+    # print(all_frames.keys())
 
     
-    frame_indices = make_dataset()
-    selected_frames = {}
+    # frame_indices = make_dataset()
+    # selected_frames = {}
 
     # all_frames - key: gloss, value: list of frames
     # frame_indices - key: gloss, value: list of lists (indices)
     # selected_frames - key: gloss, value: list of the selected frames
 
     # for each gloss in frame indices
-    for gloss, frames_index in frame_indices.items():
-        print("List of indices is: " + str(len(frames_index)) + " long.")
-        # for each list of indices in the gloss
-        for i in range(len(frames_index)):
-            # for each index in the list of indices
-            print("Length of frames: " + str(len(all_frames[gloss])))
-            print("Index is " + str(i))
-            print("Frames are: " + str(all_frames[gloss][i]))
+    # for gloss, frames_index in frame_indices.items():
+    #     selected_video_frames = []
+    #     for video_frames_index in range(len(all_frames[gloss])):
+    #         selected_video_indices = frames_index[video_frames_index]
+    #         all_frames_video = all_frames[gloss][video_frames_index]
+    #         selected_frames_video = []
+    #         for i in range(len(all_frames_video)):
+    #             if i in selected_video_indices: # if the index is in the list of selected indices
+    #                 selected_frames_video.append(all_frames_video[i])
             
-            selected_frames[gloss] = all_frames[gloss][frame_indices[gloss]]
-
-        # selected = [all_frames[gloss][i] for i in len(frames_index)]
-        # selected_frames[gloss] = selected #TODO: Change if doesn't work
+    #         selected_video_frames.append(selected_frames_video)
+            
+    #     selected_frames[gloss] = selected_video_frames
     
-    print("Printing number of selected frames")
-    print(len(selected_frames.values()))
+    # for key, value in selected_frames.items():
+    
+    #     for i in range(len(value)):
+    #         print("Printing the number of frames selected from each video")
+    #         print(len(value[i]))
+
     # # for each video in the dataset
     # for index in range(len(frame_indices)):
     #     # get the selected frames in the video
     #     video_frames = all_frames[index][frame_indices[index]]
     #     # add the selected frames to the list of selected frames
     #     selected_frames.append(video_frames)
-    return selected_frames
+    for key, value in all_frames.items():
+        for i in range(len(value)):
+            print("Printing number of frames")
+            print(len(value[i]))
+
+    return all_frames
     
 
 """"
@@ -178,8 +201,6 @@ def make_dataset():
     #     all_videos.append(frames)
     
     # return the list of the indices all frames selected
-
-    print(all_videos)
 
     return all_videos
     
