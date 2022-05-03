@@ -43,29 +43,32 @@ def videosToFrames():
                     # break if the frame is not valid
                     if not ret:
                         break
-                    
-                    if total_frames > 50:
-                        frames_skip = set()
-                        num_skips = total_frames - threshold
-                        interval = total_frames // num_skips
+                
+                    # if total_frames > 50:
+                    #     frames_skip = set()
+                    #     num_skips = total_frames - threshold
+                    #     interval = total_frames // num_skips
 
-                        # resize the frame to a smaller size and add it to the list of frames
-                        frame = cv2.resize(frame, (540, 380), fx=0, fy=0, interpolation=cv2.INTER_CUBIC)
-                        curr_frame_num = cap.get(cv2.CAP_PROP_POS_FRAMES)
+                    #     # resize the frame to a smaller size and add it to the list of frames
+                    #     frame = cv2.resize(frame, (540, 380), fx=0, fy=0, interpolation=cv2.INTER_CUBIC)
+                    #     curr_frame_num = cap.get(cv2.CAP_PROP_POS_FRAMES)
 
-                        if (curr_frame_num % interval == 0 and len(frames_skip) <= num_skips):
-                            frames_skip.add(curr_frame_num)
-                        else:
-                        # if (curr_frame_num not in frames_skip):
-                            curr_frames.append(frame)
-                    else: # if total number of frames less than the threshold
-                        curr_frames.append(frame)
+                    #     if (curr_frame_num % interval == 0 and len(frames_skip) <= num_skips):
+                    #         frames_skip.add(curr_frame_num)
+                    #     else:
+                    #     # if (curr_frame_num not in frames_skip):
+                    #         curr_frames.append(frame)
+                    # else: # if total number of frames less than the threshold
+                    curr_frames.append(frame)
                     
                 # release the video capture object
                 cap.release()
                 
-                # add all the frames to the list of all frames        
-                gloss_frames.append(curr_frames)
+                # sample curr_frames to get 50 frames
+                sampled_frames = sampling(curr_frames)
+                
+                # add the selected 50 frames to the list of all frames        
+                gloss_frames.append(sampled_frames)
 
         # if not os.path.exists('frames/' + gloss):
         #     os.makedirs('frames/' + gloss)
@@ -126,6 +129,24 @@ def videosToFrames():
 
     return all_frames
     
+def sampling(curr_frames):
+    num_frames = len(curr_frames)
+    frames_to_sample = []
+    if num_frames > threshold:
+        frames_skip = set()
+        num_skips = num_frames - threshold
+        interval = num_frames // num_skips
+
+        for i in range(num_frames):
+            if i % interval == 0 and len(frames_skip) <= num_skips:
+                frames_skip.add(i)
+        for i in range(num_frames):
+            if i not in frames_skip:
+                frames_to_sample.append(curr_frames[i])
+    else:
+        frames_to_sample = list(range(num_frames))
+    
+    return frames_to_sample
 
 """"
 This function loops through all objects in the dataset
@@ -134,110 +155,110 @@ are stored in the data list variable. After, it loops
 over these data entries and sequentially samples the frames
 and stores the indices of all frames in the all_frames list.
 """
-def make_dataset():
-    # store video instances into custom entries
-    data = {}
-    # set the split file
-    split = ['train', 'val']
-    # set the number of samples per video
-    num_samples = 50
-    # store the directory of the videos
-    index_file_path = "./WLASL_v0.3.json"
-    # store the list of all videos
-    all_videos = {}
+# def make_dataset():
+#     # store video instances into custom entries
+#     data = {}
+#     # set the split file
+#     split = ['train', 'val']
+#     # set the number of samples per video
+#     num_samples = 50
+#     # store the directory of the videos
+#     index_file_path = "./WLASL_v0.3.json"
+#     # store the list of all videos
+#     all_videos = {}
 
-    # open the json file and read into content
-    with open(index_file_path, 'r') as f:
-        content = json.load(f)
+#     # open the json file and read into content
+#     with open(index_file_path, 'r') as f:
+#         content = json.load(f)
 
-     # make dataset using glosses (i.e. words)
-    for gloss_entry in content:
-        # store the gloss and the video instances (there are multiple videos for each gloss)
-        gloss, instances = gloss_entry['gloss'], gloss_entry['instances']
+#      # make dataset using glosses (i.e. words)
+#     for gloss_entry in content:
+#         # store the gloss and the video instances (there are multiple videos for each gloss)
+#         gloss, instances = gloss_entry['gloss'], gloss_entry['instances']
 
-        # only create entires for desired glosses
-        if (gloss == "hello" or gloss == "world"):
-            gloss_data = []
-            # for each video instance
-            for instance in instances:
-                # if the video is not in the train split
-                if instance['split'] not in split:
-                    # skip the video instance
-                    continue
+#         # only create entires for desired glosses
+#         if (gloss == "hello" or gloss == "world"):
+#             gloss_data = []
+#             # for each video instance
+#             for instance in instances:
+#                 # if the video is not in the train split
+#                 if instance['split'] not in split:
+#                     # skip the video instance
+#                     continue
                 
-                # store the frame end and start, as well as the video id
-                frame_end = instance['frame_end']
-                frame_start = instance['frame_start']
-                video_id = instance['video_id']
+#                 # store the frame end and start, as well as the video id
+#                 frame_end = instance['frame_end']
+#                 frame_start = instance['frame_start']
+#                 video_id = instance['video_id']
 
-                # store the id, frame start, frame end as an entry in the data list
-                instance_entry = video_id, frame_start, frame_end
-                gloss_data.append(instance_entry)
+#                 # store the id, frame start, frame end as an entry in the data list
+#                 instance_entry = video_id, frame_start, frame_end
+#                 gloss_data.append(instance_entry)
 
-            data[gloss] = gloss_data
+#             data[gloss] = gloss_data
     
-    # go through each gloss and get its frames
-    for index in data.keys():
-        gloss_frames = []
-        # for each data instance in gloss_data
-        for datum in data[index]: 
-            # destructure the data entry stored above
-            video_id, frame_start, frame_end = datum
-            # sequential sampling the frames
-            frames = sequential_sampling(frame_start, frame_end, num_samples)
-            gloss_frames.append(frames)
+#     # go through each gloss and get its frames
+#     for index in data.keys():
+#         gloss_frames = []
+#         # for each data instance in gloss_data
+#         for datum in data[index]: 
+#             # destructure the data entry stored above
+#             video_id, frame_start, frame_end = datum
+#             # sequential sampling the frames
+#             frames = sequential_sampling(frame_start, frame_end, num_samples)
+#             gloss_frames.append(frames)
         
-        all_videos[index] = gloss_frames
+#         all_videos[index] = gloss_frames
 
 
-    # go through each video and get its frame samples
+#     # go through each video and get its frame samples
     
-    # for index in range(len(data)):
-    #     # destructure the data entry stored above
-    #     video_id, frame_start, frame_end = data[index]
-    #     # sequential sampling the frames
-    #     frames = sequential_sampling(frame_start, frame_end, num_samples)
-    #     # store all the grabbed frames
-    #     all_videos.append(frames)
+#     # for index in range(len(data)):
+#     #     # destructure the data entry stored above
+#     #     video_id, frame_start, frame_end = data[index]
+#     #     # sequential sampling the frames
+#     #     frames = sequential_sampling(frame_start, frame_end, num_samples)
+#     #     # store all the grabbed frames
+#     #     all_videos.append(frames)
     
-    # return the list of the indices all frames selected
+#     # return the list of the indices all frames selected
 
-    return all_videos
+#     return all_videos
     
 
-"""Keep sequentially ${num_samples} frames from the whole video sequence by uniformly skipping frames."""
-def sequential_sampling(frame_start, frame_end, num_samples):
-    # capture the number of frames in the video
-    num_frames = frame_end - frame_start + 1
+# """Keep sequentially ${num_samples} frames from the whole video sequence by uniformly skipping frames."""
+# def sequential_sampling(frame_start, frame_end, num_samples):
+#     # capture the number of frames in the video
+#     num_frames = frame_end - frame_start + 1
 
-    # store the sampled frames
-    frames_to_sample = []
+#     # store the sampled frames
+#     frames_to_sample = []
     
-    # if the number of frames exceeds the threshold number of frames
-    if num_frames > num_samples:
-        # store the number of frames to skip
-        frames_skip = set()
+#     # if the number of frames exceeds the threshold number of frames
+#     if num_frames > num_samples:
+#         # store the number of frames to skip
+#         frames_skip = set()
 
-        # the number of frames to skip is uniformly distributed between 0 and the number of frames
-        num_skips = num_frames - num_samples
-        interval = num_frames // num_skips
+#         # the number of frames to skip is uniformly distributed between 0 and the number of frames
+#         num_skips = num_frames - num_samples
+#         interval = num_frames // num_skips
 
-        # for each frame from start to end
-        for i in range(frame_start, frame_end + 1):
-            # store frames to skip uniformly at random
-            if i % interval == 0 and len(frames_skip) <= num_skips:
-                frames_skip.add(i)
+#         # for each frame from start to end
+#         for i in range(frame_start, frame_end + 1):
+#             # store frames to skip uniformly at random
+#             if i % interval == 0 and len(frames_skip) <= num_skips:
+#                 frames_skip.add(i)
 
-        # loop through the frames once more and store "non-skipped" frames
-        for i in range(frame_start, frame_end + 1):
-            if i not in frames_skip:
-                frames_to_sample.append(i)
-    else:
-        # if the number of samples is less than the number of frames, the frames to sample are all the frames
-        frames_to_sample = list(range(frame_start, frame_end + 1))
+#         # loop through the frames once more and store "non-skipped" frames
+#         for i in range(frame_start, frame_end + 1):
+#             if i not in frames_skip:
+#                 frames_to_sample.append(i)
+#     else:
+#         # if the number of samples is less than the number of frames, the frames to sample are all the frames
+#         frames_to_sample = list(range(frame_start, frame_end + 1))
     
-    # return all the frames to sample
-    return frames_to_sample
+#     # return all the frames to sample
+#     return frames_to_sample
 
 if __name__ == '__main__':
     videosToFrames()
