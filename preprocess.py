@@ -64,6 +64,10 @@ def videosToFrames():
                     curr_filename = "Image" + str(index) + ".jpg"
                     cv2.imwrite(curr_filename, sampled_frames[index])
                 
+                # change back to root directory
+                os.chdir("../")
+                os.chdir("../")
+
                 # add the selected 50 frames to the list of all frames        
                 gloss_frames.append(sampled_frames)
 
