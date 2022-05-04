@@ -13,16 +13,22 @@ threshold = 50
 # This is the method for splitting all video samples into frames.
 def videosToFrames():
     directory = 'videos'
-    
-    # if the frames directory does not exist, create it
-    # if not os.path.exists('frames'):
-    #     os.makedirs('frames')
-    
+
+    # make frames directory to store the images
+    if not os.path.exists('frames'): 
+        os.mkdir('frames')
+     
     # iterate over the sub directories in videos
     for gloss in os.listdir(directory):
+        # create directory for each gloss, create it if it doen't exist
+        gloss_f = os.path.join('frames', gloss)
+        if not os.path.exists(gloss_f):
+            os.mkdir(gloss_f)
+        
         gloss_frames = [] # frames for all videos in the same gloss
 
         sub_dir = os.path.join(directory, gloss)
+    
         # iterate over files in the directory
         for filename in os.listdir(sub_dir):
             f = os.path.join(sub_dir, filename) # file path
@@ -51,6 +57,13 @@ def videosToFrames():
                 # sample curr_frames to get 50 frames
                 sampled_frames = sequential_sampling(curr_frames)
                 
+                # add the sampled frames to the gloss subdirectory
+                os.chdir(gloss_f)
+                print("Saving image to directory")
+                for index in range(len(sampled_frames)):
+                    curr_filename = "Image" + str(index) + ".jpg"
+                    cv2.imwrite(curr_filename, sampled_frames[index])
+                
                 # add the selected 50 frames to the list of all frames        
                 gloss_frames.append(sampled_frames)
 
@@ -58,10 +71,10 @@ def videosToFrames():
         all_frames[gloss] = gloss_frames
 
     # print out the all_frames dictionary to check if it's been populated correctly
-    for key, value in all_frames.items():
-        for i in range(len(value)):
-            print("Printing number of frames")
-            print(len(value[i]))
+    # for key, value in all_frames.items():
+    #     for i in range(len(value)):
+    #         print("Printing number of frames")
+    #         print(len(value[i]))
 
     return all_frames
     
