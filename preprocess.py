@@ -26,6 +26,7 @@ def videosToFrames():
             os.mkdir(gloss_f)
         
         gloss_frames = [] # frames for all videos in the same gloss
+        count = 1 # the number of frames in each gloss
 
         sub_dir = os.path.join(directory, gloss)
     
@@ -60,9 +61,10 @@ def videosToFrames():
                 # add the sampled frames to the gloss subdirectory
                 os.chdir(gloss_f)
                 print("Saving image to directory")
-                for index in range(len(sampled_frames)):
-                    curr_filename = "Image" + str(index) + ".jpg"
-                    cv2.imwrite(curr_filename, sampled_frames[index])
+                for frame in sampled_frames:
+                    curr_filename = "Image" + str(count) + ".jpg"
+                    cv2.imwrite(curr_filename, frame)
+                    count += 1
                 
                 # change back to root directory
                 os.chdir("../")
