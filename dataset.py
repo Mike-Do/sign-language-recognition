@@ -15,7 +15,7 @@ print("Torchvision Version: ",torchvision.__version__)
 
 
 # Top level data directory. Here we assume the format of the directory conforms
-#   to the ImageFolder structure
+# to the ImageFolder structure
 data_dir = "./frames"
 
 # Models to choose from [resnet, alexnet, vgg, squeezenet, densenet, inception]
@@ -32,13 +32,14 @@ num_epochs = 15
 
 # Flag for feature extracting. When False, we finetune the whole model,
 #   when True we only update the reshaped layer params
+# TODO: May need to change to false depending on accuracy
 feature_extract = True
 
 input_size = 224 # ResNet expects input size to be (224, 224)
 
 def makeDataset():
     # Data augmentation and normalization for training
-        # Just normalization for validation
+    # Just normalization for validation
     data_transforms = {
         'train': transforms.Compose([
             transforms.RandomResizedCrop(input_size),
@@ -69,5 +70,33 @@ def makeDataset():
     print("Printing dataloaders_dict: ")
     print(dataloaders_dict)
 
+def initialize_model(num_classes, feature_extract, use_pretrained=True):
+    # Initialize these variables which will be set in this if statement. Each of these
+    #   variables is model specific.
+    model_ft = None
+    input_size = 0
+
+    """ Resnet18 # for small dataset with only two classes TODO: change to different version
+    """
+    model_ft = models.resnet18(pretrained=use_pretrained)
+    set_parameter_requires_grad(model_ft, feature_extract)
+    num_ftrs = model_ft.fc.in_features
+    model_ft.fc = nn.Linear(num_ftrs, num_classes)
+    input_size = 224
+
+    # Initialize the model for this run
+    model_ft, input_size = initialize_model(model_name, num_classes, feature_extract, use_pretrained=True)
+    
+    # Print the model we just instantiated
+    print("Printing model: ")
+    print(model_ft)
+    return model_ft, input_size
+
+def set_parameter_requires_grad(model, feature_extracting):
+    if feature_extracting:
+        for param in model.parameters():
+            param.requires_grad = False
+
 if __name__ == '__main__':
     makeDataset()
+    

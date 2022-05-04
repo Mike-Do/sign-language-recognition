@@ -3,6 +3,7 @@ import os
 import cv2
 import numpy as np
 import json
+import uuid
 
 import shutil
 
@@ -17,18 +18,32 @@ def videosToFrames():
     # make frames directory to store the images
     if not os.path.exists('frames'): 
         os.mkdir('frames')
-     
+    
+    # make train and test directories to store training and testing data
+    train_f = os.path.join('frames', 'train')
+    test_f = os.path.join('frames', 'val')
+    if not os.path.exists(train_f):
+        os.mkdir(train_f)
+    if not os.path.exists(test_f):
+        os.mkdir(test_f)
+
     # iterate over the sub directories in videos
     for gloss in os.listdir(directory):
-        # create directory for each gloss, create it if it doen't exist
-        gloss_f = os.path.join('frames', gloss)
-        if not os.path.exists(gloss_f):
-            os.mkdir(gloss_f)
+        # create directory for each gloss in train and test if it doesn't exist
+        train_gloss_f = os.path.join('frames/train', gloss)
+        test_gloss_f = os.path.join('frames/val', gloss)
+
+        # if gloss directory doesn't exist, create it
+        if not os.path.exists(train_gloss_f):
+            os.mkdir(train_gloss_f)
+        if not os.path.exists(test_gloss_f):
+            os.mkdir(test_gloss_f)
         
         gloss_frames = [] # frames for all videos in the same gloss
-        count = 1 # the number of frames in each gloss
 
         sub_dir = os.path.join(directory, gloss)
+
+        train = True # indicate if the video is for training or testing
     
         # iterate over files in the directory
         for filename in os.listdir(sub_dir):
@@ -59,16 +74,25 @@ def videosToFrames():
                 sampled_frames = sequential_sampling(curr_frames)
                 
                 # add the sampled frames to the gloss subdirectory
-                os.chdir(gloss_f)
+                if train:
+                    os.chdir(train_gloss_f)
+                else:
+                    os.chdir(test_gloss_f)
+
                 print("Saving image to directory")
                 for frame in sampled_frames:
-                    curr_filename = "Image" + str(count) + ".jpg"
+                    # check for valid frame
+                    if frame is None or type(frame) is int or np.sum(frame) == 0:
+                        continue
+                    
+                    # generate random name for each Image
+                    curr_filename = "Image" + str(uuid.uuid4()) + ".jpg"
                     cv2.imwrite(curr_filename, frame)
-                    count += 1
+
+                train = not train
                 
-                # change back to root directory
-                os.chdir("../")
-                os.chdir("../")
+                # change back to root directory (3 levels back)
+                os.chdir("../../../")
 
                 # add the selected 50 frames to the list of all frames        
                 gloss_frames.append(sampled_frames)
