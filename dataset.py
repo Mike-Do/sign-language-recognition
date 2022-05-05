@@ -70,7 +70,7 @@ def makeDataset():
     print("Printing dataloaders_dict: ")
     print(dataloaders_dict)
 
-def initialize_model(num_classes, feature_extract, use_pretrained=True):
+def initialize_model(use_pretrained=True):
     # Initialize these variables which will be set in this if statement. Each of these
     #   variables is model specific.
     model_ft = None
@@ -83,13 +83,6 @@ def initialize_model(num_classes, feature_extract, use_pretrained=True):
     num_ftrs = model_ft.fc.in_features
     model_ft.fc = nn.Linear(num_ftrs, num_classes)
     input_size = 224
-
-    # Initialize the model for this run
-    model_ft, input_size = initialize_model(model_name, num_classes, feature_extract, use_pretrained=True)
-    
-    # Print the model we just instantiated
-    print("Printing model: ")
-    print(model_ft)
     return model_ft, input_size
 
 def set_parameter_requires_grad(model, feature_extracting):
@@ -99,4 +92,10 @@ def set_parameter_requires_grad(model, feature_extracting):
 
 if __name__ == '__main__':
     makeDataset()
+    # Initialize the model for this run
+    model_ft, input_size = initialize_model(use_pretrained=True)
+    
+    # Print the model we just instantiated
+    print("Printing model: ")
+    print(model_ft)
     
