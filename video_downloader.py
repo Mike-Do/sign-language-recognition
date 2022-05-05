@@ -11,6 +11,8 @@ import logging
 logging.basicConfig(filename='download_{}.log'.format(int(time.time())), filemode='w', level=logging.DEBUG)
 logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
 
+glosses = ["hello", "world"] # list of words to classify
+num_video = 5 # number of videos to download for each word (separately for non YT and YT)
 
 def request_video(url, referer=''):
     user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
@@ -81,13 +83,13 @@ def download_nonyt_videos(indexfile, saveto='raw_videos'):
         gloss = entry['gloss']
         instances = entry['instances']
         
-        # if the word is "hello" or "world", save its video
-        if (gloss == "hello" or gloss == "world"):
+        # if the word is in the list of words to classify, save its video
+        if (gloss in glosses):
             counter = 0
 
             for inst in instances:
-                # if the counter exceeds 5, skip the rest
-                if (counter > 5):
+                # if the counter exceeds the number of videos to download, skip the rest
+                if (counter > num_video):
                     break
                 
                 print("NOTE (NONYT): this is instance", counter, "of the gloss:", gloss)
@@ -127,12 +129,12 @@ def download_yt_videos(indexfile, saveto='raw_videos'):
         gloss = entry['gloss']
         instances = entry['instances']
         
-        # if the word is "hello" or "world", save its video
-        if (gloss == "hello" or gloss == "world"):
+        # if the word is in the list of words to classify, save its video
+        if (gloss in glosses):
             counter = 0
 
             for inst in instances:
-                if (counter > 5):
+                if (counter > num_video):
                     break
 
                 print("NOTE (YT): this is instance ", counter, "of the gloss: ", gloss)

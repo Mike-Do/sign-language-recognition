@@ -8,6 +8,8 @@ import cv2
 
 import shutil
 
+glosses = ["hello", "world"] # list of words to classify
+
 def convert_everything_to_mp4():
     cmd = 'bash scripts/swf2mp4.sh'
 
@@ -65,8 +67,8 @@ def extract_all_yt_instances(content):
         gloss = entry['gloss']
         instances = entry['instances']
         
-        # if the word is "hello" or "world", save its video
-        if (gloss == "hello" or gloss == "world"):
+        # if the word is in the list of words to classify, save its video
+        if (gloss in glosses):
             for inst in instances:
                 url = inst['url']
                 video_id = inst['video_id']
