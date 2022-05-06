@@ -68,11 +68,6 @@ def makeDataset():
 
     # Detect if we have a GPU available
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
-    print("Printing image datasets: ")
-    print(image_datasets)
-    print("Printing dataloaders_dict: ")
-    print(dataloaders_dict)
     return image_datasets, dataloaders_dict
 
 def initialize_model(use_pretrained=True):
