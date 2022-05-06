@@ -84,7 +84,7 @@ def videosToFrames():
                     # check for valid frame
                     if frame is None or type(frame) is int or np.sum(frame) == 0:
                         continue
-                    
+
                     # generate random name for each Image
                     curr_filename = "Image" + str(uuid.uuid4()) + ".jpg"
                     cv2.imwrite(curr_filename, frame)

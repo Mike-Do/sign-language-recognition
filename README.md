@@ -1,5 +1,9 @@
 # sign-language-recognition
 
+Problems with Data:
+1. Some of the video samples contain random frames even after preprocessing, which affects the accuracy
+of the model.
+
 Questions for Henry:
 • How should we install the dataset?
 • Is it feasible to train on all 2000 words, with way more than 2000 videos? (> 100 gb storage locally)
