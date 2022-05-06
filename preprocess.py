@@ -43,6 +43,10 @@ def videosToFrames():
 
         sub_dir = os.path.join(directory, gloss)
 
+        # check if sub_dir is a valid directory
+        if os.path.isdir(sub_dir) == False:
+            continue
+
         train = True # indicate if the video is for training or testing
     
         # iterate over files in the directory

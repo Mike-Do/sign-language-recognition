@@ -30,7 +30,7 @@ num_epochs = 15
 # Flag for feature extracting. When False, we finetune the whole model,
 # when True we only update the reshaped layer params
 # TODO: May need to change to false depending on accuracy
-feature_extract = False
+feature_extract = True
 
 input_size = 224 # ResNet expects input size to be (224, 224)
 
