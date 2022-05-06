@@ -10,9 +10,6 @@ import matplotlib.pyplot as plt
 import time
 import os
 import copy
-print("PyTorch Version: ",torch.__version__)
-print("Torchvision Version: ",torchvision.__version__)
-
 
 # Top level data directory. Here we assume the format of the directory conforms
 # to the ImageFolder structure
@@ -31,15 +28,16 @@ batch_size = 8
 num_epochs = 15
 
 # Flag for feature extracting. When False, we finetune the whole model,
-#   when True we only update the reshaped layer params
+# when True we only update the reshaped layer params
 # TODO: May need to change to false depending on accuracy
-feature_extract = True
+feature_extract = False
 
 input_size = 224 # ResNet expects input size to be (224, 224)
 
 device = None
 
-model_ft = None
+# model_ft is the model we will train
+# model_ft = None
 
 criterion = nn.CrossEntropyLoss() # set up the loss fxn
 
@@ -97,7 +95,7 @@ def set_parameter_requires_grad(model, feature_extracting):
         for param in model.parameters():
             param.requires_grad = False
 
-def create_optimizier():
+def create_optimizer(model_ft):
     # Send the model to GPU
     model_ft = model_ft.to(device)
 
@@ -108,6 +106,7 @@ def create_optimizier():
     #  is True.
     params_to_update = model_ft.parameters()
     print("Params to learn:")
+    # choice of optimizer and alr
     if feature_extract:
         params_to_update = []
         for name,param in model_ft.named_parameters():
@@ -216,5 +215,5 @@ if __name__ == '__main__':
     print(model_ft)
     
     # Train and evaluate the model
-    optimizer_ft = create_optimizier()
+    optimizer_ft = create_optimizer(model_ft)
     train_model(model_ft, dataloaders_dict, criterion, optimizer_ft, num_epochs=num_epochs, is_inception=(model_name=="inception"))
