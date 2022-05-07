@@ -78,7 +78,7 @@ def initialize_model(use_pretrained=True):
 
     """ Resnet18 # for small dataset with only two classes TODO: change to different version
     """
-    model_ft = models.resnet34(pretrained=use_pretrained)
+    model_ft = models.resnet18(pretrained=use_pretrained)
     set_parameter_requires_grad(model_ft, feature_extract)
     num_ftrs = model_ft.fc.in_features
     model_ft.fc = nn.Linear(num_ftrs, num_classes)
