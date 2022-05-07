@@ -19,6 +19,7 @@ data_dir = "./frames"
 model_name = "resnet"
 
 # Number of classes in the dataset
+# num_classes = 17
 num_classes = 2
 
 # Batch size for training (change depending on how much memory you have)
