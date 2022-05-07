@@ -11,8 +11,11 @@ import logging
 logging.basicConfig(filename='download_{}.log'.format(int(time.time())), filemode='w', level=logging.DEBUG)
 logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
 
-glosses = ["hello", "world"] # list of words to classify
-num_video = 5 # number of videos to download for each word (separately for non YT and YT)
+# list of words to classify
+glosses = ["again", "also", "ask", "because", "boy", "but", "can", "come", "deaf", "different",
+"drink", "drive", "eat", "email", "excuse", "family", "feel", "few", "find", "fine"] 
+
+num_video = 10 # number of videos to download for each word (separately for non YT and YT)
 
 def request_video(url, referer=''):
     user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'

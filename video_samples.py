@@ -8,7 +8,9 @@ import cv2
 
 import shutil
 
-glosses = ["hello", "world"] # list of words to classify
+# list of words to classify
+glosses = ["again", "also", "ask", "because", "boy", "but", "can", "come", "deaf", "different",
+"drink", "drive", "eat", "email", "excuse", "family", "feel", "few", "find", "fine"] 
 
 def convert_everything_to_mp4():
     cmd = 'bash scripts/swf2mp4.sh'
@@ -69,6 +71,11 @@ def extract_all_yt_instances(content):
         
         # if the word is in the list of words to classify, save its video
         if (gloss in glosses):
+            # make a sub-directory for the current gloss if it doesn't exist
+            if not os.path.exists(os.path.join('videos', gloss)):
+                # make the directory
+                os.mkdir(os.path.join('videos', gloss))
+
             for inst in instances:
                 url = inst['url']
                 video_id = inst['video_id']
@@ -124,10 +131,9 @@ def extract_all_yt_instances(content):
                     if not os.path.exists(src_video_path):
                         continue
 
-                    print(cnt, dst_video_path)
+                    # check if dst_video_path 
                     shutil.copyfile(src_video_path, dst_video_path)
 
-        
 def main():
     # 1. Convert .swf, .mkv file to mp4.
     convert_everything_to_mp4()

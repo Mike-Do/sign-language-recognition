@@ -1,5 +1,36 @@
 # sign-language-recognition
 
+Running Instructions:
+1. python video_downloader.py to download the raw videos
+2. python video_samples.py to process the raw videos into video samples
+3. python preprocess.py to split the video samples into frames, create training and testing dataset and store them in directories
+
+List of Words (20):
+1. again
+2. also
+3. ask
+4. because
+5. boy
+6. but
+7. can
+8. come
+9. deaf
+10. different
+11. drink
+12. drive
+13. eat
+14. email
+15. excuse
+16. family
+17. feel
+18. few
+19. find
+20. fine
+
+Download 10 videos for each word
+
+Source: https://www.handspeak.com/word/most-used/
+
 Problems with Data:
 1. Some of the video samples contain random frames even after preprocessing, which affects the accuracy
 of the model.

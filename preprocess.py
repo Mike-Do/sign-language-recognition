@@ -104,11 +104,7 @@ def videosToFrames():
         # add all the frames to the all_frames dictionary
         all_frames[gloss] = gloss_frames
 
-    # print out the all_frames dictionary to check if it's been populated correctly
-    # for key, value in all_frames.items():
-    #     for i in range(len(value)):
-    #         print("Printing number of frames")
-    #         print(len(value[i]))
+    find_missing() # find words with no train/val data and write them to a textfile
 
     return all_frames
     
@@ -130,6 +126,47 @@ def sequential_sampling(curr_frames):
         frames_to_sample = list(range(num_frames))
     
     return frames_to_sample
+
+
+def find_missing():
+    missing = []
+    # loop through all the directories in train,
+    # if the directory is empty, save the directory name to a list
+    # delete the directory, and the corresponding directory in val
+    
+    train_f = os.path.join('frames', 'train')
+    test_f = os.path.join('frames', 'val')
+    for gloss in os.listdir(train_f):
+        # check if directory is empty
+        if len(os.listdir(os.path.join(train_f, gloss))) == 0:      
+            # append gloss to list 
+            missing.append(gloss)
+            # delete the directory in train and in val
+            shutil.rmtree(os.path.join(train_f, gloss))
+            # recursively remove the directory in val
+            shutil.rmtree(os.path.join(test_f, gloss))
+        
+    # loop through all the directories in val,
+    # if the directory is empty, save the directory name to a list
+    # delete the directory, and the corresponding directory in val
+    for gloss in os.listdir(test_f):
+        if len(os.listdir(os.path.join(test_f, gloss))) == 0:
+            # append gloss to list
+            missing.append(gloss)
+            # delete the directory in val
+            shutil.rmtree(os.path.join(test_f, gloss))
+            # recursively remove the directory in train
+            shutil.rmtree(os.path.join(train_f, gloss))
+            
+    # write the list to a text file called missing_words.txt
+    # open the file to write to it, or create it if it doesn't exist
+    if os.path.exists('missing_words.txt'):
+        print('file already exists')
+    
+    with open('missing_words.txt', 'w') as f:
+        # append the list to the file
+        for gloss in missing:
+            f.write(gloss + '\n')    
 
 """"
 This function loops through all objects in the dataset
