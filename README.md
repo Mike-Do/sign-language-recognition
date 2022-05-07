@@ -1,5 +1,7 @@
 # sign-language-recognition
 
+1. Binary and 
+
 Running Instructions:
 1. python video_downloader.py to download the raw videos
 2. python video_samples.py to process the raw videos into video samples

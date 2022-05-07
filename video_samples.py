@@ -9,8 +9,7 @@ import cv2
 import shutil
 
 # list of words to classify
-glosses = ["again", "also", "ask", "because", "boy", "but", "can", "come", "deaf", "different",
-"drink", "drive", "eat", "email", "excuse", "family", "feel", "few", "find", "fine"] 
+glosses = ["hello", "world"] 
 
 def convert_everything_to_mp4():
     cmd = 'bash scripts/swf2mp4.sh'
