@@ -9,7 +9,7 @@ import shutil
 
 # dictionary maps glosses to their corresponding frames
 all_frames = {}
-threshold = 50
+threshold = 60
 
 # This is the method for splitting all video samples into frames.
 def videosToFrames():
