@@ -184,7 +184,7 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=25, is_ince
                 # if missclassification, print out the timage
                 # missclassified = (preds != labels.data).nonzero()
 
-                # # write the missclassified images to tensorboard
+                # # # write the missclassified images to tensorboard
                 # if len(missclassified) > 0:
                 #     for i in range(len(missclassified)):
                 #         writer.add_image('missclassified/' + str(i), inputs[missclassified[i][0]], epoch)
