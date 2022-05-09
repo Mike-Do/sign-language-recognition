@@ -30,7 +30,7 @@ num_classes = 2
 batch_size = 8
 
 # Number of epochs to train for
-num_epochs = 15
+num_epochs = 30
 
 # Flag for feature extracting. When False, we finetune the whole model,
 # when True we only update the reshaped layer params
@@ -182,12 +182,12 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=25, is_ince
                 running_corrects += torch.sum(preds == labels.data)
 
                 # if missclassification, print out the timage
-                missclassified = (preds != labels.data).nonzero()
+                # missclassified = (preds != labels.data).nonzero()
 
-                # write the missclassified images to tensorboard
-                if len(missclassified) > 0:
-                    for i in range(len(missclassified)):
-                        writer.add_image('missclassified/' + str(i), inputs[missclassified[i][0]], epoch)
+                # # write the missclassified images to tensorboard
+                # if len(missclassified) > 0:
+                #     for i in range(len(missclassified)):
+                #         writer.add_image('missclassified/' + str(i), inputs[missclassified[i][0]], epoch)
 
             epoch_loss = running_loss / len(dataloaders[phase].dataset)
             epoch_acc = running_corrects.double() / len(dataloaders[phase].dataset)
