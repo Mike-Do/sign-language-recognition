@@ -16,7 +16,7 @@ logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
 # "drink", "drive", "eat", "email", "excuse", "family", "feel", "few", "find", "fine"] 
 glosses = ["hello", "world"]
 
-# num_video = 10
+num_video = 10
 num_video = 12 # number of videos to download for each word (separately for non YT and YT)
 
 def request_video(url, referer=''):
