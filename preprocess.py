@@ -4,12 +4,13 @@ import cv2
 import numpy as np
 import json
 import uuid
-
+import random
 import shutil
 
-# dictionary maps glosses to their corresponding frames
+# dictionary that maps glosses to their corresponding frames
 all_frames = {}
-threshold = 60
+# number of frames to select from each video
+threshold = 60 
 
 # This is the method for splitting all video samples into frames.
 def videosToFrames():
@@ -107,10 +108,16 @@ def videosToFrames():
     find_missing() # find words with no train/val data and write them to a textfile
 
     return all_frames
-    
+
+# This is the method for randomly selecting a set number of frames from each video sample. 
 def sequential_sampling(curr_frames):
+    # shuffle the frames before sampling
+    random.shuffle(curr_frames)
+
     num_frames = len(curr_frames)
     frames_to_sample = []
+
+    # sequentially select a set number of frames from each video
     if num_frames > threshold:
         frames_skip = set()
         num_skips = num_frames - threshold
@@ -127,7 +134,7 @@ def sequential_sampling(curr_frames):
     
     return frames_to_sample
 
-
+# This is the method for finding the missing words (words with no video data) and deleting their directories. 
 def find_missing():
     missing = []
     # loop through all the directories in train,
@@ -168,117 +175,6 @@ def find_missing():
         for gloss in missing:
             f.write(gloss + '\n')    
 
-""""
-This function loops through all objects in the dataset
-and creates a custom data entry for each object. These data entries
-are stored in the data list variable. After, it loops
-over these data entries and sequentially samples the frames
-and stores the indices of all frames in the all_frames list.
-"""
-# def make_dataset():
-#     # store video instances into custom entries
-#     data = {}
-#     # set the split file
-#     split = ['train', 'val']
-#     # set the number of samples per video
-#     num_samples = 50
-#     # store the directory of the videos
-#     index_file_path = "./WLASL_v0.3.json"
-#     # store the list of all videos
-#     all_videos = {}
-
-#     # open the json file and read into content
-#     with open(index_file_path, 'r') as f:
-#         content = json.load(f)
-
-#      # make dataset using glosses (i.e. words)
-#     for gloss_entry in content:
-#         # store the gloss and the video instances (there are multiple videos for each gloss)
-#         gloss, instances = gloss_entry['gloss'], gloss_entry['instances']
-
-#         # only create entires for desired glosses
-#         if (gloss == "hello" or gloss == "world"):
-#             gloss_data = []
-#             # for each video instance
-#             for instance in instances:
-#                 # if the video is not in the train split
-#                 if instance['split'] not in split:
-#                     # skip the video instance
-#                     continue
-                
-#                 # store the frame end and start, as well as the video id
-#                 frame_end = instance['frame_end']
-#                 frame_start = instance['frame_start']
-#                 video_id = instance['video_id']
-
-#                 # store the id, frame start, frame end as an entry in the data list
-#                 instance_entry = video_id, frame_start, frame_end
-#                 gloss_data.append(instance_entry)
-
-#             data[gloss] = gloss_data
-    
-#     # go through each gloss and get its frames
-#     for index in data.keys():
-#         gloss_frames = []
-#         # for each data instance in gloss_data
-#         for datum in data[index]: 
-#             # destructure the data entry stored above
-#             video_id, frame_start, frame_end = datum
-#             # sequential sampling the frames
-#             frames = sequential_sampling(frame_start, frame_end, num_samples)
-#             gloss_frames.append(frames)
-        
-#         all_videos[index] = gloss_frames
-
-
-#     # go through each video and get its frame samples
-    
-#     # for index in range(len(data)):
-#     #     # destructure the data entry stored above
-#     #     video_id, frame_start, frame_end = data[index]
-#     #     # sequential sampling the frames
-#     #     frames = sequential_sampling(frame_start, frame_end, num_samples)
-#     #     # store all the grabbed frames
-#     #     all_videos.append(frames)
-    
-#     # return the list of the indices all frames selected
-
-#     return all_videos
-    
-
-# """Keep sequentially ${num_samples} frames from the whole video sequence by uniformly skipping frames."""
-# def sequential_sampling(frame_start, frame_end, num_samples):
-#     # capture the number of frames in the video
-#     num_frames = frame_end - frame_start + 1
-
-#     # store the sampled frames
-#     frames_to_sample = []
-    
-#     # if the number of frames exceeds the threshold number of frames
-#     if num_frames > num_samples:
-#         # store the number of frames to skip
-#         frames_skip = set()
-
-#         # the number of frames to skip is uniformly distributed between 0 and the number of frames
-#         num_skips = num_frames - num_samples
-#         interval = num_frames // num_skips
-
-#         # for each frame from start to end
-#         for i in range(frame_start, frame_end + 1):
-#             # store frames to skip uniformly at random
-#             if i % interval == 0 and len(frames_skip) <= num_skips:
-#                 frames_skip.add(i)
-
-#         # loop through the frames once more and store "non-skipped" frames
-#         for i in range(frame_start, frame_end + 1):
-#             if i not in frames_skip:
-#                 frames_to_sample.append(i)
-#     else:
-#         # if the number of samples is less than the number of frames, the frames to sample are all the frames
-#         frames_to_sample = list(range(frame_start, frame_end + 1))
-    
-#     # return all the frames to sample
-#     return frames_to_sample
 
 if __name__ == '__main__':
     videosToFrames()

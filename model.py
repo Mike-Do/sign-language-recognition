@@ -34,18 +34,17 @@ num_epochs = 30
 
 # Flag for feature extracting. When False, we finetune the whole model,
 # when True we only update the reshaped layer params
-# TODO: May need to change to false depending on accuracy
 feature_extract = True
 
-input_size = 224 # ResNet expects input size to be (224, 224)
+# ResNet expects input size to be (224, 224)
+input_size = 224 
 
 device = None
 
-# model_ft is the model we will train
-# model_ft = None
+# set up the loss fxn
+criterion = nn.CrossEntropyLoss() 
 
-criterion = nn.CrossEntropyLoss() # set up the loss fxn
-
+# This is the method that makes the training and testing dataset for the model.
 def makeDataset():
     # Data augmentation and normalization for training
     # Just normalization for validation
@@ -75,13 +74,14 @@ def makeDataset():
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     return image_datasets, dataloaders_dict
 
+# This method initializes the ResNet18 model.
 def initialize_model(use_pretrained=True):
     # Initialize these variables which will be set in this if statement. Each of these
     #   variables is model specific.
     # model_ft = None
     input_size = 0
 
-    """ Resnet18 # for small dataset with only two classes TODO: change to different version
+    """ Resnet18 # for small dataset with only two classes
     """
     model_ft = models.resnet18(pretrained=use_pretrained)
     set_parameter_requires_grad(model_ft, feature_extract)
@@ -90,11 +90,13 @@ def initialize_model(use_pretrained=True):
     input_size = 224
     return model_ft, input_size
 
+# This method sets the requires_grad parameters of the parameters.
 def set_parameter_requires_grad(model, feature_extracting):
     if feature_extracting:
         for param in model.parameters():
             param.requires_grad = False
 
+# This method creates the optimizier of the model based on the parameters the model needs to learn.
 def create_optimizer(model_ft):
     # Send the model to GPU
     model_ft = model_ft.to(device)
@@ -122,7 +124,7 @@ def create_optimizer(model_ft):
     optimizer_ft = optim.SGD(params_to_update, lr=0.01, momentum=0.9)
     return optimizer_ft
 
-
+# This method trains the model on the training dataset and evaluates it on the val dataset.
 def train_model(model, dataloaders, criterion, optimizer, num_epochs=25, is_inception=False):
     since = time.time()
 
@@ -131,6 +133,7 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=25, is_ince
     best_model_wts = copy.deepcopy(model.state_dict())
     best_acc = 0.0
 
+    # Iterate through all the epochs
     for epoch in range(num_epochs):
         print('Epoch {}/{}'.format(epoch, num_epochs - 1))
         print('-' * 10)
@@ -225,10 +228,6 @@ if __name__ == '__main__':
     # Initialize the model for this run
     model_ft, input_size = initialize_model(use_pretrained=True)
     
-    # Print the model we just instantiated
-    print("Printing model: ")
-    print(model_ft)
-    
     # Train and evaluate the model
     optimizer_ft = create_optimizer(model_ft)
     model, val_acc_history = train_model(model_ft, dataloaders_dict, criterion, optimizer_ft, num_epochs=num_epochs, is_inception=(model_name=="inception"))
@@ -238,5 +237,3 @@ if __name__ == '__main__':
 
     # close the writer
     writer.close()
-
-
