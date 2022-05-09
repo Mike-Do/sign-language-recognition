@@ -1,7 +1,6 @@
 from __future__ import print_function
 from __future__ import division
 from distutils.fancy_getopt import wrap_text
-from tkinter import E
 import torch
 import torch.nn as nn
 import torch.optim as optim
