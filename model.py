@@ -1,15 +1,20 @@
 from __future__ import print_function
 from __future__ import division
+from distutils.fancy_getopt import wrap_text
+from tkinter import E
 import torch
 import torch.nn as nn
 import torch.optim as optim
 import numpy as np
 import torchvision
 from torchvision import datasets, models, transforms
-import matplotlib.pyplot as plt
+from torch.utils.tensorboard import SummaryWriter
 import time
 import os
 import copy
+
+# create a writer for tensorboard
+writer = SummaryWriter()
 
 # Top level data directory. Here we assume the format of the directory conforms
 # to the ImageFolder structure
@@ -26,7 +31,7 @@ num_classes = 2
 batch_size = 8
 
 # Number of epochs to train for
-num_epochs = 50
+num_epochs = 30
 
 # Flag for feature extracting. When False, we finetune the whole model,
 # when True we only update the reshaped layer params
@@ -177,10 +182,26 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=25, is_ince
                 running_loss += loss.item() * inputs.size(0)
                 running_corrects += torch.sum(preds == labels.data)
 
+                # if missclassification, print out the timage
+                missclassified = (preds != labels.data).nonzero()
+
+                # write the missclassified images to tensorboard
+                if len(missclassified) > 0:
+                    for i in range(len(missclassified)):
+                        writer.add_image('missclassified/' + str(i), inputs[missclassified[i][0]], epoch)
+
             epoch_loss = running_loss / len(dataloaders[phase].dataset)
             epoch_acc = running_corrects.double() / len(dataloaders[phase].dataset)
 
             print('{} Loss: {:.4f} Acc: {:.4f}'.format(phase, epoch_loss, epoch_acc))
+
+            # add loss to tensorboard
+            writer.add_scalar('{}_loss'.format(phase), epoch_loss, epoch)  
+            writer.flush()
+
+            # add acc to tensorboard
+            writer.add_scalar('{}_acc'.format(phase), epoch_acc, epoch)
+            writer.flush()
 
             # deep copy the model
             if phase == 'val' and epoch_acc > best_acc:
@@ -212,4 +233,12 @@ if __name__ == '__main__':
     
     # Train and evaluate the model
     optimizer_ft = create_optimizer(model_ft)
-    train_model(model_ft, dataloaders_dict, criterion, optimizer_ft, num_epochs=num_epochs, is_inception=(model_name=="inception"))
+    model, val_acc_history = train_model(model_ft, dataloaders_dict, criterion, optimizer_ft, num_epochs=num_epochs, is_inception=(model_name=="inception"))
+
+    # make sure all pending work is done
+    writer.flush()
+
+    # close the writer
+    writer.close()
+
+

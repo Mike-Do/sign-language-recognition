@@ -1,41 +1,14 @@
 # sign-language-recognition
 
-1. Binary and 
-
 Running Instructions:
 1. python video_downloader.py to download the raw videos
 2. python video_samples.py to process the raw videos into video samples
 3. python preprocess.py to split the video samples into frames, create training and testing dataset and store them in directories
 
-List of Words (20):
-1. again
-2. also
-3. ask
-4. because
-5. boy
-6. but
-7. can
-8. come
-9. deaf
-10. different
-11. drink
-12. drive
-13. eat
-14. email
-15. excuse
-16. family
-17. feel
-18. few
-19. find
-20. fine
-
-Download 10 videos for each word
-
-Source: https://www.handspeak.com/word/most-used/
-
 Problems with Data:
 1. Some of the video samples contain random frames even after preprocessing, which affects the accuracy
 of the model.
+2. Many of the video samples include frames where the signers aren't making any signs and are simply standing still. These frames are hard for the model to classify and negatively affect the accuracy of our model.
 
 Questions for Henry:
 • How should we install the dataset?
