@@ -181,10 +181,9 @@ def train_model(model, dataloaders, criterion, optimizer, num_epochs=25, is_ince
                 running_loss += loss.item() * inputs.size(0)
                 running_corrects += torch.sum(preds == labels.data)
 
-                # if missclassification, print out the timage
+                ### UNCOMMENT TO DOWNLOAD MISSCLASSIFIED IMAGES TO TENSORBOARD ###
                 # missclassified = (preds != labels.data).nonzero()
-
-                # # # write the missclassified images to tensorboard
+                # 
                 # if len(missclassified) > 0:
                 #     for i in range(len(missclassified)):
                 #         writer.add_image('missclassified/' + str(i), inputs[missclassified[i][0]], epoch)
