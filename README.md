@@ -1,13 +1,13 @@
 # sign-language-recognition
 
 Running Instructions:
-1. python video_downloader.py to download the raw videos. The raw videos downloaded can be found under
+1. `python video_downloader.py` to download the raw videos. The raw videos downloaded can be found under
 the raw_videos directory.
-2. python video_samples.py to process the raw videos into video samples. The video samples can be found
+2. `python video_samples.py` to process the raw videos into video samples. The video samples can be found
 under the videos directory.
-3. python preprocess.py to split the video samples into frames, create training and testing dataset and store them in directories. The frames can be found in the frames directory, separated into training
+3. `python preprocess.py` to split the video samples into frames, create training and testing dataset and store them in directories. The frames can be found in the frames directory, separated into training
 and testing sub-directories.
-4. python model.py to train and evaluate the model. The training and testing accuracy for each epoch will be printed out.
+4. `python model.py` to train and evaluate the model. The training and testing accuracy for each epoch will be printed out.
 
 Problems with Data:
 1. Some of the video samples contain random frames even after preprocessing, which affects the accuracy
