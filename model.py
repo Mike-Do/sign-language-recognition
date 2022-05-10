@@ -23,7 +23,6 @@ data_dir = "./frames"
 model_name = "resnet"
 
 # Number of classes in the dataset
-# num_classes = 17
 num_classes = 2
 
 # Batch size for training (change depending on how much memory you have)
@@ -78,7 +77,6 @@ def makeDataset():
 def initialize_model(use_pretrained=True):
     # Initialize these variables which will be set in this if statement. Each of these
     #   variables is model specific.
-    # model_ft = None
     input_size = 0
 
     """ Resnet18 # for small dataset with only two classes
