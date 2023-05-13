@@ -1,18 +1,15 @@
 # Robust Sign Language Detection on WLASL
 
-## Abstract
-
 Vision-based sign language recognition aims to identify
 specific human hand gestures to convey information. For
 this project, we present and analyze a system that interprets
 American Sign Language (ASL) using a vocabulary set from
 the Word-Level American Sign Language (WLASL) video
 dataset, which contains more than 2,000 words and 21,000
-videos performed by over 100 signers. Although the original
-paper that introduces this dataset trains a model on all 2,000
-words/glosses, we trained a binary classifier with a maxi-
-mum of 12 videos per word, due to limited computational
-resources
+videos performed by over 100 signers. 
+
+Due to limited computational resources, we devised a binary classifier with a maxi-
+mum of 12 videos per word.
 
 Running Instructions:
 1. `python video_downloader.py` to download the raw videos. The raw videos downloaded can be found under
