@@ -8,8 +8,7 @@ the Word-Level American Sign Language (WLASL) video
 dataset, which contains more than 2,000 words and 21,000
 videos performed by over 100 signers. 
 
-Due to limited computational resources, we devised a binary classifier with a maxi-
-mum of 12 videos per word.
+Due to limited computational resources, we devised a binary classifier with a maximum of 12 videos per word. We also wrote scripts to preprocess and parse the WLASL dataset for our classification purposes.
 
 Running Instructions:
 1. `python video_downloader.py` to download the raw videos. The raw videos downloaded can be found under
