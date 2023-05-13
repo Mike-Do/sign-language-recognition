@@ -26,5 +26,4 @@ of the model.
 2. Many of the video samples include frames where the signers aren't making any signs and are simply standing still. These frames are hard for the model to classify and negatively affect the accuracy of our model.
 
 The number of words to classify and the number of videos to download for each word can be adjusted by
-changing the parameters in video_downloader.py and video_samples.py. Due to lack of computational
-resources, we trained a binary classifier using 12 videos per word.  
+changing the parameters in video_downloader.py and video_samples.py. 
